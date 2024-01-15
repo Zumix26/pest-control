@@ -1,0 +1,47 @@
+{
+    "name": "pest-control/trap-monitoring",
+    "type": "project",
+    "description": "IoT Pest Control Trap Monitoring System",
+    "keywords": ["laravel", "iot", "pest-control", "ddd"],
+    "license": "MIT",
+    "require": {
+        "php": "^8.5",
+        "laravel/framework": "^12.46"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/",
+            "Database\\Factories\\": "database/factories/",
+            "Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover --ansi"
+        ],
+        "test": "pest",
+        "test:coverage": "pest --coverage",
+        "phpstan": "phpstan analyse",
+        "pint": "pint",
+        "pint:test": "pint --test"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
