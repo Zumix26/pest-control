@@ -8,7 +8,7 @@
 ## File Structure (STRICT)
 
 ```
-app/
+src/
 ├── Domain/                              # Pure PHP - No Framework
 │   ├── Monitoring/                      # BC: Trap & Gateway Monitoring
 │   │   ├── Entities/                    # Trap, Gateway, TrapEvent (pure PHP)

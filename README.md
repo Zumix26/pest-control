@@ -55,7 +55,7 @@ The system is divided into three **Bounded Contexts**:
 ## 📁 Project Structure
 
 ```
-app/
+src/
 ├── Domain/                              # Pure PHP - No Framework Dependencies
 │   ├── Monitoring/                      # BC: Trap & Gateway Monitoring
 │   │   ├── Entities/                    # Trap, Gateway, TrapEvent (pure PHP)
