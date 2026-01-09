@@ -13,6 +13,7 @@ yarn-error.log
 /.idea
 /.vscode
 /.claude
+CLAUDE.md
 /bootstrap/cache/*
 !/bootstrap/cache/.gitkeep
 /storage/logs/*
