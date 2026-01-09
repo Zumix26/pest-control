@@ -12,6 +12,7 @@ npm-debug.log
 yarn-error.log
 /.idea
 /.vscode
+/.claude
 /bootstrap/cache/*
 !/bootstrap/cache/.gitkeep
 /storage/logs/*
