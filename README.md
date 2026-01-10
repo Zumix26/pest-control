@@ -80,7 +80,7 @@ src/
 └── Infrastructure/  # Laravel, DB, внешние сервисы
 ```
 
-Подробнее об архитектурных решениях читайте в [ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Подробнее об архитектурных решениях читайте в [ARCHITECTURE.md]
 
 ## Требования к коду
 
