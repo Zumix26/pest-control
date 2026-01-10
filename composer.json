@@ -9,7 +9,12 @@
         "laravel/framework": "^12.46"
     },
     "require-dev": {
-        "laravel/pint": "^1.15"
+        "larastan/larastan": "^3.8",
+        "laravel/pint": "^1.15",
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^4.3",
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +35,7 @@
         ],
         "test": "pest",
         "test:coverage": "pest --coverage",
-        "phpstan": "phpstan analyse",
+        "phpstan": "phpstan analyse --memory-limit=512M",
         "pint": "pint",
         "pint:test": "pint --test"
     },
