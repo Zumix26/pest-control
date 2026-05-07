@@ -5,7 +5,7 @@
     "keywords": ["laravel", "iot", "pest-control", "ddd"],
     "license": "MIT",
     "require": {
-        "php": "^8.5",
+        "php": "^8.3",
         "darkaonline/l5-swagger": "^8.0",
         "laravel/framework": "^12.46",
         "laravel/reverb": "^1.7",
