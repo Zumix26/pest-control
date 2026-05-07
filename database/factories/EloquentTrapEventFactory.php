@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentTrap;
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentTrapEvent;
+use App\Domain\Monitoring\Models\Trap;
+use App\Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<EloquentTrapEvent>
+ * @extends Factory<TrapEvent>
  */
 final class EloquentTrapEventFactory extends Factory
 {
-    protected $model = EloquentTrapEvent::class;
+    protected $model = TrapEvent::class;
 
     public function definition(): array
     {
         return [
-            'trap_id' => EloquentTrap::factory(),
+            'trap_id' => Trap::factory(),
             'caught_at' => fake()->dateTimeBetween('-30 days', 'now'),
             'battery_level' => fake()->numberBetween(20, 100),
             'rssi' => fake()->numberBetween(-120, -30),

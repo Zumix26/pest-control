@@ -1,0 +1,1954 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "IoT Trap Monitoring System API",
+        "description": "API для системы мониторинга IoT ловушек для борьбы с вредителями. Включает управление шлюзами, ловушками и регистрацию событий срабатывания.",
+        "contact": {
+            "email": "support@trap-monitoring.local"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:3000/api",
+            "description": "Local Development Server"
+        },
+        {
+            "url": "https://api.trap-monitoring.local/api",
+            "description": "Production Server"
+        }
+    ],
+    "paths": {
+        "/v1/customers": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List all customers",
+                "operationId": "f2066eaaf1fa79d2e7658ef86e3566e4",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "individual",
+                                "company"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of customers",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CustomerResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Create a new customer",
+                "operationId": "141556723be774f5dcc8402358875c13",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCustomerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Customer created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            }
+        },
+        "/v1/customers/{id}": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Get customer by ID with facilities",
+                "operationId": "cfeeafe51258aac882f26f8462e73df4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Customer details with facilities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerWithFacilitiesResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Update customer",
+                "operationId": "21e4130bfdfa4908f6d67921e8b9be61",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateCustomerRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Customer updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CustomerResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Customer not found"
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Delete customer (soft delete with cascade)",
+                "description": "Soft deletes the customer, all its facilities, and sets all gateways and traps to IN_STOCK status",
+                "operationId": "7fe6c4ed57f4ab6ca572b5f48bc9458a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Customer deleted successfully"
+                    },
+                    "404": {
+                        "description": "Customer not found"
+                    }
+                }
+            }
+        },
+        "/v1/customers/{id}/facilities": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List all facilities for a customer",
+                "operationId": "a7de42d3077c75c94daefd18e60a3bfe",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "List of facilities",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FacilityResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/facilities": {
+            "get": {
+                "tags": [
+                    "Facilities"
+                ],
+                "summary": "List facilities",
+                "operationId": "getFacilities",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "warehouse",
+                                "restaurant",
+                                "office",
+                                "retail",
+                                "industrial"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/FacilityResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Facilities"
+                ],
+                "summary": "Create facility",
+                "operationId": "createFacility",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateFacilityRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/facilities/{id}": {
+            "get": {
+                "tags": [
+                    "Facilities"
+                ],
+                "summary": "Get facility details",
+                "operationId": "getFacilityById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityWithGatewaysResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Facilities"
+                ],
+                "summary": "Update facility",
+                "operationId": "updateFacility",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateFacilityRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/FacilityResource"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Facilities"
+                ],
+                "summary": "Delete facility",
+                "operationId": "deleteFacility",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Deleted"
+                    }
+                }
+            }
+        },
+        "/v1/facilities/{id}/gateways": {
+            "get": {
+                "tags": [
+                    "Facilities"
+                ],
+                "summary": "Get facility gateways",
+                "operationId": "getFacilityGateways",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GatewayResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/gateways": {
+            "get": {
+                "tags": [
+                    "Gateways"
+                ],
+                "summary": "Список шлюзов",
+                "description": "Получить список всех IoT шлюзов с возможностью фильтрации по статусу",
+                "operationId": "getGateways",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Фильтр по статусу шлюза",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "online",
+                                "offline",
+                                "maintenance"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/GatewayResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Gateways"
+                ],
+                "summary": "Создать шлюз",
+                "description": "Создать новый IoT шлюз в системе",
+                "operationId": "createGateway",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateGatewayRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Шлюз успешно создан",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GatewayResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The hardware id has already been taken."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "hardware_id": [
+                                                    "The hardware id has already been taken."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/gateways/{id}": {
+            "get": {
+                "tags": [
+                    "Gateways"
+                ],
+                "summary": "Детали шлюза",
+                "description": "Получить детальную информацию об IoT шлюзе по его ID",
+                "operationId": "getGatewayById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID шлюза",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GatewayResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Шлюз не найден",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Gateway not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/traps": {
+            "get": {
+                "tags": [
+                    "Traps"
+                ],
+                "summary": "Список ловушек",
+                "description": "Получить список всех ловушек с возможностью фильтрации по статусу, типу или шлюзу",
+                "operationId": "getTraps",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Фильтр по статусу ловушки",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "active",
+                                "inactive",
+                                "maintenance",
+                                "faulty"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Фильтр по типу ловушки",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "rat",
+                                "mouse",
+                                "insect"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "gateway_id",
+                        "in": "query",
+                        "description": "Фильтр по UUID шлюза",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/TrapResource"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Traps"
+                ],
+                "summary": "Создать ловушку",
+                "description": "Создать новую ловушку в системе",
+                "operationId": "createTrap",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTrapRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Ловушка успешно создана",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrapResource"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The hardware id has already been taken."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "hardware_id": [
+                                                    "The hardware id has already been taken."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/traps/{id}": {
+            "get": {
+                "tags": [
+                    "Traps"
+                ],
+                "summary": "Детали ловушки",
+                "description": "Получить детальную информацию о ловушке по её ID",
+                "operationId": "getTrapById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID ловушки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Успешный ответ",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrapResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ловушка не найдена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trap not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/traps/{id}/test-trigger": {
+            "post": {
+                "tags": [
+                    "Traps"
+                ],
+                "summary": "Тестовое срабатывание ловушки",
+                "description": "Тестовый endpoint для симуляции срабатывания ловушки без HMAC проверки. Создает событие с дефолтными значениями (battery: 85%, rssi: -65 dBm). Используется для тестирования и отладки.",
+                "operationId": "testTriggerTrap",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "UUID ловушки",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Событие успешно создано",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrapEventResource"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Ловушка не найдена",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Trap not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/trap-events": {
+            "post": {
+                "tags": [
+                    "Trap Events"
+                ],
+                "summary": "Зарегистрировать событие ловушки",
+                "description": "Зарегистрировать событие срабатывания ловушки. Требует HMAC подпись в заголовке X-Signature для аутентификации IoT устройства.",
+                "operationId": "registerTrapEvent",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RegisterTrapEventRequest"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Событие успешно зарегистрировано",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TrapEventResource"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Неверная или отсутствующая HMAC подпись",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Invalid signature"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Ошибка валидации",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The trap id field is required."
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "example": {
+                                                "trap_id": [
+                                                    "The trap id field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "HmacSignature": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateCustomerRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "phone",
+                    "type",
+                    "billing_address"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "ACME Corporation"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "info@acme.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "example": "+380501234567"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "individual",
+                            "company"
+                        ],
+                        "example": "company"
+                    },
+                    "billing_address": {
+                        "required": [
+                            "street",
+                            "city",
+                            "postal_code",
+                            "country"
+                        ],
+                        "properties": {
+                            "street": {
+                                "type": "string",
+                                "example": "123 Business Ave"
+                            },
+                            "city": {
+                                "type": "string",
+                                "example": "Kyiv"
+                            },
+                            "postal_code": {
+                                "type": "string",
+                                "example": "01001"
+                            },
+                            "country": {
+                                "type": "string",
+                                "example": "Ukraine"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "tax_number": {
+                        "type": "string",
+                        "example": "1234567890",
+                        "nullable": true
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Premium customer",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateFacilityRequest": {
+                "required": [
+                    "name",
+                    "address",
+                    "contact_person",
+                    "contact_phone",
+                    "type",
+                    "area"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Main Warehouse"
+                    },
+                    "address": {
+                        "required": [
+                            "street",
+                            "city",
+                            "postal_code",
+                            "country"
+                        ],
+                        "properties": {
+                            "street": {
+                                "type": "string",
+                                "example": "123 Main Street"
+                            },
+                            "city": {
+                                "type": "string",
+                                "example": "Kyiv"
+                            },
+                            "postal_code": {
+                                "type": "string",
+                                "example": "01001"
+                            },
+                            "country": {
+                                "type": "string",
+                                "example": "Ukraine"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "contact_person": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "contact_phone": {
+                        "type": "string",
+                        "example": "+380501234567"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "warehouse",
+                            "restaurant",
+                            "office",
+                            "retail",
+                            "industrial"
+                        ],
+                        "example": "warehouse"
+                    },
+                    "area": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "example": 1500.5
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Main distribution center",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active",
+                        "nullable": true
+                    },
+                    "customer_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "01963e34-e7bc-7890-b23c-000000000001",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateGatewayRequest": {
+                "required": [
+                    "hardware_id",
+                    "name"
+                ],
+                "properties": {
+                    "hardware_id": {
+                        "description": "Уникальный идентификатор оборудования шлюза",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "GW-001-ABC123"
+                    },
+                    "facility_id": {
+                        "description": "UUID объекта, на котором устанавливается этот шлюз",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "019bac36-54b6-70dc-94c3-cea624a51791"
+                    },
+                    "name": {
+                        "description": "Название шлюза",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Gateway Floor 1"
+                    },
+                    "status": {
+                        "description": "Статус шлюза",
+                        "type": "string",
+                        "enum": [
+                            "online",
+                            "offline",
+                            "maintenance"
+                        ],
+                        "example": "online",
+                        "nullable": true
+                    },
+                    "location": {
+                        "description": "Географическое расположение шлюза",
+                        "properties": {
+                            "latitude": {
+                                "type": "number",
+                                "format": "float",
+                                "maximum": 90,
+                                "minimum": -90,
+                                "example": 50.4501
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "float",
+                                "maximum": 180,
+                                "minimum": -180,
+                                "example": 30.5234
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "CreateTrapRequest": {
+                "required": [
+                    "hardware_id",
+                    "gateway_id",
+                    "name",
+                    "type"
+                ],
+                "properties": {
+                    "hardware_id": {
+                        "description": "Уникальный идентификатор оборудования ловушки",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "TRAP-001-XYZ789"
+                    },
+                    "gateway_id": {
+                        "description": "UUID шлюза, к которому подключена ловушка",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "name": {
+                        "description": "Название ловушки",
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Trap Kitchen Area"
+                    },
+                    "type": {
+                        "description": "Тип ловушки",
+                        "type": "string",
+                        "enum": [
+                            "rat",
+                            "mouse",
+                            "insect"
+                        ],
+                        "example": "rat"
+                    },
+                    "status": {
+                        "description": "Статус ловушки",
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive",
+                            "maintenance",
+                            "faulty"
+                        ],
+                        "example": "active",
+                        "nullable": true
+                    },
+                    "location": {
+                        "description": "Географическое расположение ловушки",
+                        "properties": {
+                            "latitude": {
+                                "type": "number",
+                                "format": "float",
+                                "maximum": 90,
+                                "minimum": -90,
+                                "example": 50.4501
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "float",
+                                "maximum": 180,
+                                "minimum": -180,
+                                "example": 30.5234
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "RegisterTrapEventRequest": {
+                "required": [
+                    "trap_id",
+                    "timestamp",
+                    "metadata"
+                ],
+                "properties": {
+                    "trap_id": {
+                        "description": "UUID ловушки, которая сработала",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "timestamp": {
+                        "description": "Unix timestamp события срабатывания",
+                        "type": "integer",
+                        "minimum": 0,
+                        "example": 1704067200
+                    },
+                    "metadata": {
+                        "description": "Метаданные события",
+                        "required": [
+                            "battery_level",
+                            "rssi"
+                        ],
+                        "properties": {
+                            "battery_level": {
+                                "description": "Уровень заряда батареи в процентах",
+                                "type": "integer",
+                                "maximum": 100,
+                                "minimum": 0,
+                                "example": 85
+                            },
+                            "rssi": {
+                                "description": "Мощность сигнала в dBm",
+                                "type": "integer",
+                                "maximum": 0,
+                                "minimum": -120,
+                                "example": -65
+                            }
+                        },
+                        "type": "object"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateCustomerRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "ACME Corporation"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "info@acme.com"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "example": "+380501234567"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "individual",
+                            "company"
+                        ],
+                        "example": "company"
+                    },
+                    "billing_address": {
+                        "required": [
+                            "street",
+                            "city",
+                            "postal_code",
+                            "country"
+                        ],
+                        "properties": {
+                            "street": {
+                                "type": "string",
+                                "example": "123 Business Ave"
+                            },
+                            "city": {
+                                "type": "string",
+                                "example": "Kyiv"
+                            },
+                            "postal_code": {
+                                "type": "string",
+                                "example": "01001"
+                            },
+                            "country": {
+                                "type": "string",
+                                "example": "Ukraine"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "tax_number": {
+                        "type": "string",
+                        "example": "1234567890",
+                        "nullable": true
+                    },
+                    "notes": {
+                        "type": "string",
+                        "example": "Premium customer",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active"
+                    }
+                },
+                "type": "object"
+            },
+            "UpdateFacilityRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255,
+                        "example": "Main Warehouse"
+                    },
+                    "address": {
+                        "required": [
+                            "street",
+                            "city",
+                            "postal_code",
+                            "country"
+                        ],
+                        "properties": {
+                            "street": {
+                                "type": "string",
+                                "example": "123 Main Street"
+                            },
+                            "city": {
+                                "type": "string",
+                                "example": "Kyiv"
+                            },
+                            "postal_code": {
+                                "type": "string",
+                                "example": "01001"
+                            },
+                            "country": {
+                                "type": "string",
+                                "example": "Ukraine"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "contact_person": {
+                        "type": "string",
+                        "example": "John Doe"
+                    },
+                    "contact_phone": {
+                        "type": "string",
+                        "example": "+380501234567"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "warehouse",
+                            "restaurant",
+                            "office",
+                            "retail",
+                            "industrial"
+                        ],
+                        "example": "warehouse"
+                    },
+                    "area": {
+                        "type": "number",
+                        "format": "float",
+                        "minimum": 0,
+                        "example": 1500.5
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Main distribution center",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive"
+                        ],
+                        "example": "active"
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerResource": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "billing_address": {
+                        "properties": {
+                            "street": {
+                                "type": "string"
+                            },
+                            "city": {
+                                "type": "string"
+                            },
+                            "postal_code": {
+                                "type": "string"
+                            },
+                            "country": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "tax_number": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "notes": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "CustomerWithFacilitiesResource": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "phone": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "billing_address": {
+                        "properties": {
+                            "street": {
+                                "type": "string"
+                            },
+                            "city": {
+                                "type": "string"
+                            },
+                            "postal_code": {
+                                "type": "string"
+                            },
+                            "country": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "tax_number": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "notes": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "facilities": {
+                        "description": "Объекты, принадлежащие клиенту",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/FacilityResource"
+                        }
+                    },
+                    "facilities_count": {
+                        "description": "Количество объектов",
+                        "type": "integer",
+                        "example": 3
+                    }
+                },
+                "type": "object"
+            },
+            "FacilityResource": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "properties": {
+                            "street": {
+                                "type": "string"
+                            },
+                            "city": {
+                                "type": "string"
+                            },
+                            "postal_code": {
+                                "type": "string"
+                            },
+                            "country": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "contact_person": {
+                        "type": "string"
+                    },
+                    "contact_phone": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "area": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "FacilityWithGatewaysResource": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "properties": {
+                            "street": {
+                                "type": "string"
+                            },
+                            "city": {
+                                "type": "string"
+                            },
+                            "postal_code": {
+                                "type": "string"
+                            },
+                            "country": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "contact_person": {
+                        "type": "string"
+                    },
+                    "contact_phone": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "area": {
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "gateways": {
+                        "description": "Шлюзы, установленные на объекте",
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/GatewayResource"
+                        }
+                    },
+                    "gateway_count": {
+                        "description": "Количество шлюзов",
+                        "type": "integer",
+                        "example": 5
+                    }
+                },
+                "type": "object"
+            },
+            "GatewayResource": {
+                "properties": {
+                    "id": {
+                        "description": "UUID шлюза",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "hardware_id": {
+                        "description": "Идентификатор оборудования",
+                        "type": "string",
+                        "example": "GW-001-ABC123"
+                    },
+                    "facility_id": {
+                        "description": "UUID объекта",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "019bac36-54b6-70dc-94c3-cea624a51791"
+                    },
+                    "name": {
+                        "description": "Название шлюза",
+                        "type": "string",
+                        "example": "Gateway Floor 1"
+                    },
+                    "location": {
+                        "description": "Координаты расположения",
+                        "properties": {
+                            "latitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 50.4501
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 30.5234
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "status": {
+                        "description": "Статус шлюза",
+                        "type": "string",
+                        "enum": [
+                            "online",
+                            "offline",
+                            "maintenance"
+                        ],
+                        "example": "online"
+                    },
+                    "is_online": {
+                        "description": "Онлайн статус",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "last_seen_at": {
+                        "description": "Время последней активности",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00+00:00"
+                    },
+                    "created_at": {
+                        "description": "Дата создания",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T10:00:00+00:00"
+                    },
+                    "updated_at": {
+                        "description": "Дата обновления",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00+00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "TrapEventResource": {
+                "properties": {
+                    "id": {
+                        "description": "UUID события",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "trap_id": {
+                        "description": "UUID ловушки",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "caught_at": {
+                        "description": "Время срабатывания",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00+00:00"
+                    },
+                    "battery_level": {
+                        "description": "Уровень заряда батареи (%)",
+                        "type": "integer",
+                        "maximum": 100,
+                        "minimum": 0,
+                        "example": 85
+                    },
+                    "rssi": {
+                        "description": "Мощность сигнала (dBm)",
+                        "type": "integer",
+                        "maximum": 0,
+                        "minimum": -120,
+                        "example": -65
+                    },
+                    "signal_quality": {
+                        "description": "Качество сигнала",
+                        "type": "string",
+                        "enum": [
+                            "excellent",
+                            "good",
+                            "fair",
+                            "weak"
+                        ],
+                        "example": "good"
+                    },
+                    "has_weak_signal": {
+                        "description": "Слабый сигнал",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "metadata": {
+                        "description": "Дополнительные метаданные",
+                        "type": "object",
+                        "example": {
+                            "battery_level": 85,
+                            "rssi": -65
+                        }
+                    },
+                    "created_at": {
+                        "description": "Дата создания записи",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:01+00:00"
+                    }
+                },
+                "type": "object"
+            },
+            "TrapResource": {
+                "properties": {
+                    "id": {
+                        "description": "UUID ловушки",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "hardware_id": {
+                        "description": "Идентификатор оборудования",
+                        "type": "string",
+                        "example": "TRAP-001-XYZ789"
+                    },
+                    "gateway_id": {
+                        "description": "UUID шлюза",
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "9d4e1c45-6b2a-4f8e-9c7d-3a1b5e8f4d2c"
+                    },
+                    "name": {
+                        "description": "Название ловушки",
+                        "type": "string",
+                        "example": "Trap Kitchen Area"
+                    },
+                    "type": {
+                        "description": "Тип ловушки",
+                        "type": "string",
+                        "enum": [
+                            "rat",
+                            "mouse",
+                            "insect"
+                        ],
+                        "example": "rat"
+                    },
+                    "status": {
+                        "description": "Статус ловушки",
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "inactive",
+                            "maintenance",
+                            "faulty"
+                        ],
+                        "example": "active"
+                    },
+                    "location": {
+                        "description": "Координаты расположения",
+                        "properties": {
+                            "latitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 50.4501
+                            },
+                            "longitude": {
+                                "type": "number",
+                                "format": "float",
+                                "example": 30.5234
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "battery_level": {
+                        "description": "Уровень заряда батареи (%)",
+                        "type": "integer",
+                        "maximum": 100,
+                        "minimum": 0,
+                        "example": 85
+                    },
+                    "is_low_battery": {
+                        "description": "Низкий заряд батареи",
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "is_operational": {
+                        "description": "Операционный статус",
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "total_catches": {
+                        "description": "Общее количество срабатываний",
+                        "type": "integer",
+                        "minimum": 0,
+                        "example": 42
+                    },
+                    "last_event_at": {
+                        "description": "Время последнего события",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00+00:00",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "description": "Дата создания",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T10:00:00+00:00"
+                    },
+                    "updated_at": {
+                        "description": "Дата обновления",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T12:00:00+00:00"
+                    },
+                    "deleted_at": {
+                        "description": "Дата удаления",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": null,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "HmacSignature": {
+                "type": "apiKey",
+                "description": "HMAC SHA-256 signature для защиты IoT endpoints. Используйте hash_hmac(\"sha256\", payload, gateway_api_key)",
+                "name": "X-Signature",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Gateways",
+            "description": "Управление IoT шлюзами"
+        },
+        {
+            "name": "Traps",
+            "description": "Управление ловушками для вредителей"
+        },
+        {
+            "name": "Trap Events",
+            "description": "Регистрация событий срабатывания ловушек"
+        },
+        {
+            "name": "Facilities",
+            "description": "Управление объектами/зданиями"
+        },
+        {
+            "name": "Customers",
+            "description": "Управление клиентами"
+        }
+    ]
+}

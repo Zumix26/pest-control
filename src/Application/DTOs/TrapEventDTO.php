@@ -20,7 +20,7 @@ final readonly class TrapEventDTO
     {
         return new self(
             trapId: $request->input('trap_id'),
-            caughtAt: new \DateTimeImmutable('@' . $request->integer('timestamp')),
+            caughtAt: new \DateTimeImmutable(),
             batteryLevel: $request->integer('metadata.battery_level'),
             rssi: $request->integer('metadata.rssi'),
             metadata: $request->input('metadata', []),

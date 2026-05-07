@@ -1,0 +1,24 @@
+{
+  "name": "pest-control-websocket-server",
+  "version": "1.0.0",
+  "description": "WebSocket server for Laravel Broadcasting",
+  "main": "websocket-server.js",
+  "scripts": {
+    "start": "node websocket-server.js",
+    "start:env": "node -r dotenv/config websocket-server.js dotenv_config_path=.env",
+    "dev": "nodemon websocket-server.js",
+    "dev:env": "nodemon -r dotenv/config websocket-server.js dotenv_config_path=.env"
+  },
+  "dependencies": {
+    "ioredis": "^5.3.2",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "laravel-echo": "^2.3.0",
+    "nodemon": "^3.1.0",
+    "pusher-js": "^8.4.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

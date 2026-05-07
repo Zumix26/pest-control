@@ -9,12 +9,13 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 final class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        // Event listeners will be registered here
-        // Example:
-        // TrapTriggered::class => [
-        //     UpdateTrapStatistics::class,
-        //     CheckBatteryLevel::class,
-        // ],
+        \App\Domain\Monitoring\Events\TrapTriggered::class => [
+            \App\Application\Listeners\CheckBatteryLevel::class,
+            \App\Application\Listeners\SendTrapTriggeredNotification::class,
+        ],
+        \App\Domain\Monitoring\Events\LowBatteryDetected::class => [
+            \App\Application\Listeners\SendLowBatteryNotification::class,
+        ],
     ];
 
     public function boot(): void

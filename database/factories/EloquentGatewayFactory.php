@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace Database\Factories;
 
 use App\Domain\Monitoring\Enums\GatewayStatus;
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentGateway;
+use App\Domain\Monitoring\Models\Gateway;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<EloquentGateway>
+ * @extends Factory<Gateway>
  */
 final class EloquentGatewayFactory extends Factory
 {
-    protected $model = EloquentGateway::class;
+    protected $model = Gateway::class;
 
     public function definition(): array
     {

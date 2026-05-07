@@ -10,6 +10,7 @@ enum TrapStatus: string
     case INACTIVE = 'inactive';
     case MAINTENANCE = 'maintenance';
     case FAULTY = 'faulty';
+    case IN_STOCK = 'in_stock';
 
     public function label(): string
     {
@@ -18,6 +19,7 @@ enum TrapStatus: string
             self::INACTIVE => 'Inactive',
             self::MAINTENANCE => 'Maintenance',
             self::FAULTY => 'Faulty',
+            self::IN_STOCK => 'In Stock',
         };
     }
 

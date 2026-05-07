@@ -11,6 +11,7 @@ final readonly class CreateGatewayDTO
 {
     public function __construct(
         public string $hardwareId,
+        public ?string $facilityId,
         public string $name,
         public array $location,
         public GatewayStatus $status,
@@ -20,6 +21,7 @@ final readonly class CreateGatewayDTO
     {
         return new self(
             hardwareId: $request->string('hardware_id')->toString(),
+            facilityId: $request->has('facility_id') ? $request->string('facility_id')->toString() : null,
             name: $request->string('name')->toString(),
             location: $request->input('location', []),
             status: $request->has('status')

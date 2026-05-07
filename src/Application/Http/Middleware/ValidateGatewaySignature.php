@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\Http\Middleware;
 
-use App\Domain\Monitoring\Repositories\GatewayRepositoryInterface;
+use App\Domain\Monitoring\Models\Gateway;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 final class ValidateGatewaySignature
 {
-    public function __construct(
-        private readonly GatewayRepositoryInterface $gatewayRepository,
-    ) {}
-
     public function handle(Request $request, Closure $next): Response
     {
         $apiKey = $request->header('X-Gateway-Key');
@@ -25,7 +21,7 @@ final class ValidateGatewaySignature
             ], 401);
         }
 
-        $gateway = $this->gatewayRepository->findByApiKey($apiKey);
+        $gateway = Gateway::where('api_key', $apiKey)->first();
 
         if ($gateway === null) {
             return response()->json([
@@ -50,8 +46,6 @@ final class ValidateGatewaySignature
         }
 
         $gateway->updateLastSeen();
-        $this->gatewayRepository->save($gateway);
-
         $request->attributes->set('gateway', $gateway);
 
         return $next($request);

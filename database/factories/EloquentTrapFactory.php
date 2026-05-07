@@ -6,23 +6,23 @@ namespace Database\Factories;
 
 use App\Domain\Monitoring\Enums\TrapStatus;
 use App\Domain\Monitoring\Enums\TrapType;
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentGateway;
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentTrap;
+use App\Domain\Monitoring\Models\Gateway;
+use App\Domain\Monitoring\Models\Trap;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
- * @extends Factory<EloquentTrap>
+ * @extends Factory<Trap>
  */
 final class EloquentTrapFactory extends Factory
 {
-    protected $model = EloquentTrap::class;
+    protected $model = Trap::class;
 
     public function definition(): array
     {
         return [
             'hardware_id' => 'TRAP-' . strtoupper(Str::random(8)),
-            'gateway_id' => EloquentGateway::factory(),
+            'gateway_id' => Gateway::factory(),
             'name' => fake()->word() . ' Trap #' . fake()->numberBetween(1, 999),
             'type' => fake()->randomElement(TrapType::cases()),
             'status' => fake()->randomElement(TrapStatus::cases()),

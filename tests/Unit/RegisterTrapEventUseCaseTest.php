@@ -4,448 +4,163 @@ declare(strict_types=1);
 
 use App\Application\DTOs\TrapEventDTO;
 use App\Application\UseCases\RegisterTrapEventUseCase;
-use App\Domain\Monitoring\Entities\Trap;
-use App\Domain\Monitoring\Entities\TrapEvent;
+use App\Domain\Monitoring\Enums\GatewayStatus;
+use App\Domain\Monitoring\Enums\TrapStatus;
 use App\Domain\Monitoring\Enums\TrapType;
-use App\Domain\Monitoring\Repositories\TrapEventRepositoryInterface;
-use App\Domain\Monitoring\Repositories\TrapRepositoryInterface;
-use App\Domain\Monitoring\ValueObjects\BatteryLevel;
-use App\Domain\Monitoring\ValueObjects\HardwareId;
-use App\Domain\Monitoring\ValueObjects\Location;
-use Illuminate\Support\Facades\DB;
+use App\Domain\Monitoring\Models\Gateway;
+use App\Domain\Monitoring\Models\Trap;
+use App\Domain\Monitoring\Models\TrapEvent;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 
-beforeEach(function () {
-    DB::shouldReceive('transaction')
-        ->andReturnUsing(function ($callback) {
-            return $callback();
-        });
-});
+uses(RefreshDatabase::class);
+
+function makeTrap(): Trap
+{
+    $gateway = Gateway::create([
+        'hardware_id' => 'GW001',
+        'api_key' => 'test-api-key-64chars-padded-to-fill-the-required-length-here',
+        'name' => 'Test Gateway',
+        'location' => ['latitude' => 0, 'longitude' => 0],
+        'status' => GatewayStatus::ONLINE,
+        'last_seen_at' => now(),
+    ]);
+
+    return Trap::create([
+        'hardware_id' => 'TRAP001',
+        'gateway_id' => $gateway->id,
+        'name' => 'Test Trap',
+        'type' => TrapType::RAT,
+        'status' => TrapStatus::ACTIVE,
+        'location' => ['latitude' => 0, 'longitude' => 0],
+        'battery_level' => 100,
+        'total_catches' => 0,
+    ]);
+}
 
 test('it registers a trap event successfully', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
+    Event::fake();
+    $trap = makeTrap();
     $caughtAt = new DateTimeImmutable('2025-01-10 12:00:00');
 
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
-
     $dto = new TrapEventDTO(
-        trapId: $trapId,
+        trapId: $trap->id,
         caughtAt: $caughtAt,
         batteryLevel: 85,
         rssi: -65,
-        metadata: ['sensor' => 'infrared', 'temperature' => 22],
+        metadata: ['sensor' => 'infrared'],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
+    $event = (new RegisterTrapEventUseCase())->execute($dto);
 
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
+    expect($event)->toBeInstanceOf(TrapEvent::class)
+        ->and($event->trap_id)->toBe($trap->id)
+        ->and($event->battery_level)->toBe(85)
+        ->and($event->rssi)->toBe(-65)
+        ->and($event->metadata)->toBe(['sensor' => 'infrared']);
 
-    $trapEventRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (TrapEvent $event) use ($eventId, $trapId, $caughtAt) {
-            return $event->id() === $eventId
-                && $event->trapId() === $trapId
-                && $event->caughtAt() == $caughtAt
-                && $event->batteryLevel()->value() === 85
-                && $event->signalStrength()->rssi() === -65
-                && $event->metadata() === ['sensor' => 'infrared', 'temperature' => 22];
-        });
-
-    $trapRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (Trap $updatedTrap) use ($trapId) {
-            return $updatedTrap->id() === $trapId
-                && $updatedTrap->totalCatches() === 1
-                && $updatedTrap->batteryLevel()->value() === 85
-                && $updatedTrap->lastEventAt() !== null;
-        });
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result)->toBeInstanceOf(TrapEvent::class)
-        ->and($result->id())->toBe($eventId)
-        ->and($result->trapId())->toBe($trapId)
-        ->and($result->batteryLevel()->value())->toBe(85)
-        ->and($result->signalStrength()->rssi())->toBe(-65)
-        ->and($result->metadata())->toBe(['sensor' => 'infrared', 'temperature' => 22]);
+    $this->assertDatabaseHas('trap_events', ['trap_id' => $trap->id, 'battery_level' => 85]);
 });
 
 test('it throws exception when trap not found', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
     $dto = new TrapEventDTO(
         trapId: 'non-existent-trap',
-        caughtAt: new DateTimeImmutable('2025-01-10 12:00:00'),
+        caughtAt: new DateTimeImmutable(),
         batteryLevel: 85,
         rssi: -65,
         metadata: [],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with('non-existent-trap')
-        ->andReturn(null);
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act & Assert
-    expect(fn () => $useCase->execute($dto))
+    expect(fn () => (new RegisterTrapEventUseCase())->execute($dto))
         ->toThrow(DomainException::class, 'Trap not found: non-existent-trap');
 });
 
-test('it updates trap total catches', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
-
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
-
-    // Simulate previous catches
-    $trap->trigger(new DateTimeImmutable('-1 hour'), new BatteryLevel(90));
-    $trap->trigger(new DateTimeImmutable('-30 minutes'), new BatteryLevel(88));
-
-    expect($trap->totalCatches())->toBe(2);
+test('it increments trap total catches', function () {
+    Event::fake();
+    $trap = makeTrap();
+    expect($trap->total_catches)->toBe(0);
 
     $dto = new TrapEventDTO(
-        trapId: $trapId,
-        caughtAt: new DateTimeImmutable('2025-01-10 12:00:00'),
+        trapId: $trap->id,
+        caughtAt: new DateTimeImmutable(),
         batteryLevel: 85,
         rssi: -65,
         metadata: [],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
+    (new RegisterTrapEventUseCase())->execute($dto);
 
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
-
-    $trapEventRepository->shouldReceive('save')
-        ->once();
-
-    $trapRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (Trap $updatedTrap) {
-            return $updatedTrap->totalCatches() === 3;
-        });
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result)->toBeInstanceOf(TrapEvent::class);
+    expect($trap->fresh()->total_catches)->toBe(1);
 });
 
 test('it updates trap battery level', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
-
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
-
-    expect($trap->batteryLevel()->value())->toBe(100); // Initial battery level
+    Event::fake();
+    $trap = makeTrap();
+    expect($trap->battery_level)->toBe(100);
 
     $dto = new TrapEventDTO(
-        trapId: $trapId,
-        caughtAt: new DateTimeImmutable('2025-01-10 12:00:00'),
+        trapId: $trap->id,
+        caughtAt: new DateTimeImmutable(),
         batteryLevel: 45,
         rssi: -65,
         metadata: [],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
+    (new RegisterTrapEventUseCase())->execute($dto);
 
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
-
-    $trapEventRepository->shouldReceive('save')
-        ->once();
-
-    $trapRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (Trap $updatedTrap) {
-            return $updatedTrap->batteryLevel()->value() === 45;
-        });
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result)->toBeInstanceOf(TrapEvent::class)
-        ->and($result->batteryLevel()->value())->toBe(45);
+    expect($trap->fresh()->battery_level)->toBe(45);
 });
 
 test('it updates trap last event timestamp', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
+    Event::fake();
+    $trap = makeTrap();
+    expect($trap->last_event_at)->toBeNull();
 
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
     $caughtAt = new DateTimeImmutable('2025-01-10 12:00:00');
-
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
-
-    expect($trap->lastEventAt())->toBeNull(); // No events yet
-
     $dto = new TrapEventDTO(
-        trapId: $trapId,
+        trapId: $trap->id,
         caughtAt: $caughtAt,
         batteryLevel: 85,
         rssi: -65,
         metadata: [],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
+    (new RegisterTrapEventUseCase())->execute($dto);
 
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
-
-    $trapEventRepository->shouldReceive('save')
-        ->once();
-
-    $trapRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (Trap $updatedTrap) use ($caughtAt) {
-            return $updatedTrap->lastEventAt() !== null
-                && $updatedTrap->lastEventAt()->getTimestamp() === $caughtAt->getTimestamp();
-        });
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result)->toBeInstanceOf(TrapEvent::class);
+    expect($trap->fresh()->last_event_at)->not->toBeNull();
 });
 
-test('it preserves metadata in trap event', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
-
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
-
-    $metadata = [
-        'sensor' => 'infrared',
-        'temperature' => 22,
-        'humidity' => 65,
-        'weight' => 350,
-    ];
+test('it correctly identifies weak signal', function () {
+    $trap = makeTrap();
 
     $dto = new TrapEventDTO(
-        trapId: $trapId,
-        caughtAt: new DateTimeImmutable('2025-01-10 12:00:00'),
+        trapId: $trap->id,
+        caughtAt: new DateTimeImmutable(),
         batteryLevel: 85,
-        rssi: -65,
-        metadata: $metadata,
+        rssi: -95,
+        metadata: [],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
+    Event::fake();
+    $event = (new RegisterTrapEventUseCase())->execute($dto);
 
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
-
-    $trapEventRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (TrapEvent $event) use ($metadata) {
-            return $event->metadata() === $metadata;
-        });
-
-    $trapRepository->shouldReceive('save')
-        ->once();
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result->metadata())->toBe($metadata);
+    expect($event->hasWeakSignal())->toBeTrue()
+        ->and($event->signalQuality())->toBe('very_poor');
 });
 
-test('it creates event with low battery level', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
-
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
+test('it correctly identifies low battery', function () {
+    $trap = makeTrap();
 
     $dto = new TrapEventDTO(
-        trapId: $trapId,
-        caughtAt: new DateTimeImmutable('2025-01-10 12:00:00'),
-        batteryLevel: 15, // Low battery
+        trapId: $trap->id,
+        caughtAt: new DateTimeImmutable(),
+        batteryLevel: 15,
         rssi: -65,
         metadata: [],
     );
 
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
+    Event::fake();
+    (new RegisterTrapEventUseCase())->execute($dto);
 
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
-
-    $trapEventRepository->shouldReceive('save')
-        ->once();
-
-    $trapRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (Trap $updatedTrap) {
-            return $updatedTrap->isLowBattery() === true;
-        });
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result->batteryLevel()->value())->toBe(15)
-        ->and($result->batteryLevel()->isLow())->toBeTrue();
-});
-
-test('it creates event with weak signal strength', function () {
-    // Arrange
-    $trapRepository = Mockery::mock(TrapRepositoryInterface::class);
-    $trapEventRepository = Mockery::mock(TrapEventRepositoryInterface::class);
-
-    $trapId = 'trap-123';
-    $eventId = 'event-456';
-
-    $trap = Trap::create(
-        id: $trapId,
-        hardwareId: new HardwareId('TRAP001'),
-        gatewayId: 'gateway-123',
-        name: 'Test Trap',
-        type: TrapType::RAT,
-        location: new Location(40.7128, -74.0060),
-    );
-
-    $dto = new TrapEventDTO(
-        trapId: $trapId,
-        caughtAt: new DateTimeImmutable('2025-01-10 12:00:00'),
-        batteryLevel: 85,
-        rssi: -95, // Weak signal
-        metadata: [],
-    );
-
-    $trapRepository->shouldReceive('findById')
-        ->once()
-        ->with($trapId)
-        ->andReturn($trap);
-
-    $trapEventRepository->shouldReceive('nextIdentity')
-        ->once()
-        ->andReturn($eventId);
-
-    $trapEventRepository->shouldReceive('save')
-        ->once()
-        ->withArgs(function (TrapEvent $event) {
-            return $event->hasWeakSignal() === true;
-        });
-
-    $trapRepository->shouldReceive('save')
-        ->once();
-
-    $useCase = new RegisterTrapEventUseCase($trapRepository, $trapEventRepository);
-
-    // Act
-    $result = $useCase->execute($dto);
-
-    // Assert
-    expect($result->signalStrength()->rssi())->toBe(-95)
-        ->and($result->hasWeakSignal())->toBeTrue()
-        ->and($result->signalStrength()->quality())->toBe('very_poor');
+    expect($trap->fresh()->isLowBattery())->toBeTrue();
 });

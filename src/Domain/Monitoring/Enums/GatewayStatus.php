@@ -9,6 +9,7 @@ enum GatewayStatus: string
     case ONLINE = 'online';
     case OFFLINE = 'offline';
     case MAINTENANCE = 'maintenance';
+    case IN_STOCK = 'in_stock';
 
     public function label(): string
     {
@@ -16,6 +17,7 @@ enum GatewayStatus: string
             self::ONLINE => 'Online',
             self::OFFLINE => 'Offline',
             self::MAINTENANCE => 'Maintenance',
+            self::IN_STOCK => 'In Stock',
         };
     }
 

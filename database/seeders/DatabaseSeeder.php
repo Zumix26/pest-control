@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentGateway;
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentTrap;
-use App\Infrastructure\Persistence\Eloquent\Models\EloquentTrapEvent;
+use App\Domain\Monitoring\Models\Gateway;
+use App\Domain\Monitoring\Models\Trap;
+use App\Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Database\Seeder;
 
 final class DatabaseSeeder extends Seeder
@@ -14,20 +14,20 @@ final class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Create 5 gateways
-        EloquentGateway::factory()
+        Gateway::factory()
             ->count(5)
             ->online()
             ->create()
-            ->each(function (EloquentGateway $gateway) {
+            ->each(function (Gateway $gateway) {
                 // Create 10 traps per gateway
-                EloquentTrap::factory()
+                Trap::factory()
                     ->count(10)
                     ->active()
                     ->for($gateway, 'gateway')
                     ->create()
-                    ->each(function (EloquentTrap $trap) {
+                    ->each(function (Trap $trap) {
                         // Create 5 events per trap
-                        $events = EloquentTrapEvent::factory()
+                        $events = TrapEvent::factory()
                             ->count(5)
                             ->for($trap, 'trap')
                             ->create();
@@ -44,29 +44,15 @@ final class DatabaseSeeder extends Seeder
             });
 
         // Create some traps with low battery
-        EloquentTrap::factory()
+        Trap::factory()
             ->count(3)
             ->active()
             ->lowBattery()
             ->create();
 
         // Create some traps with specific types
-        EloquentTrap::factory()
-            ->count(2)
-            ->ratTrap()
-            ->active()
-            ->create();
-
-        EloquentTrap::factory()
-            ->count(2)
-            ->mouseTrap()
-            ->active()
-            ->create();
-
-        EloquentTrap::factory()
-            ->count(2)
-            ->insectTrap()
-            ->active()
-            ->create();
+        Trap::factory()->count(2)->ratTrap()->active()->create();
+        Trap::factory()->count(2)->mouseTrap()->active()->create();
+        Trap::factory()->count(2)->insectTrap()->active()->create();
     }
 }
