@@ -7,7 +7,7 @@ use App\Application\UseCases\RegisterTrapEventUseCase;
 use App\Domain\Monitoring\Enums\GatewayStatus;
 use App\Domain\Monitoring\Enums\TrapStatus;
 use App\Domain\Monitoring\Enums\TrapType;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use App\Domain\Monitoring\Models\Trap;
 use App\Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Application\UseCases;
 
 use App\Application\DTOs\CreateTrapDTO;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use App\Domain\Monitoring\Models\Trap;
 
 final class CreateTrapUseCase

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use App\Domain\Monitoring\Models\Trap;
 use App\Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Database\Seeder;

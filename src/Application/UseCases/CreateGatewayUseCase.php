@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCases;
+namespace App\UseCases;
 
 use App\Application\DTOs\CreateGatewayDTO;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use Illuminate\Support\Str;
 
 final readonly class CreateGatewayUseCase

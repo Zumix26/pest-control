@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Resources;
+namespace App\Http\Resources;
 
 use App\Domain\Monitoring\Models\Facility;
 use DateTimeInterface;

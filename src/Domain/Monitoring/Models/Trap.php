@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Monitoring\Models;
+namespace Domain\Monitoring\Models;
 
 use App\Domain\Monitoring\Enums\TrapStatus;
 use App\Domain\Monitoring\Enums\TrapType;

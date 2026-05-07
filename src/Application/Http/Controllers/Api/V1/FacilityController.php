@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Application\Http\Controllers\Api\V1;
 
-use App\Application\DTOs\CreateFacilityDTO;
-use App\Application\DTOs\UpdateFacilityDTO;
+use App\DTOs\CreateFacilityDTO;
+use App\DTOs\UpdateFacilityDTO;
 use App\Application\Http\Requests\CreateFacilityRequest;
 use App\Application\Http\Requests\UpdateFacilityRequest;
-use App\Application\Http\Resources\FacilityResource;
-use App\Application\Http\Resources\FacilityWithGatewaysResource;
-use App\Application\Http\Resources\GatewayResource;
+use App\Http\Resources\FacilityResource;
+use App\Http\Resources\FacilityWithGatewaysResource;
+use App\Http\Resources\GatewayResource;
 use App\Application\Monitoring\Queries\GetFacilityQuery;
 use App\Application\Monitoring\Queries\ListFacilitiesQuery;
 use App\Application\Monitoring\UseCases\CreateFacilityUseCase;

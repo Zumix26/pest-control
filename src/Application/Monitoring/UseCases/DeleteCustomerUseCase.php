@@ -8,7 +8,7 @@ use App\Domain\Monitoring\Enums\GatewayStatus;
 use App\Domain\Monitoring\Enums\TrapStatus;
 use App\Domain\Monitoring\Models\Customer;
 use App\Domain\Monitoring\Models\Facility;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use App\Domain\Monitoring\Models\Trap;
 use Illuminate\Support\Facades\DB;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\DTOs;
+namespace App\DTOs;
 
 use App\Domain\Monitoring\Enums\FacilityStatus;
 use App\Domain\Monitoring\Enums\FacilityType;

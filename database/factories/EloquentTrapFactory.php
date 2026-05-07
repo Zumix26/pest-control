@@ -6,7 +6,7 @@ namespace Database\Factories;
 
 use App\Domain\Monitoring\Enums\TrapStatus;
 use App\Domain\Monitoring\Enums\TrapType;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use App\Domain\Monitoring\Models\Trap;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
 use App\Application\DTOs\CreateGatewayDTO;
 use App\Application\Http\Requests\CreateGatewayRequest;
-use App\Application\Http\Resources\GatewayResource;
-use App\Application\UseCases\CreateGatewayUseCase;
+use App\Http\Resources\GatewayResource;
+use App\UseCases\CreateGatewayUseCase;
 use App\Domain\Monitoring\Enums\GatewayStatus;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

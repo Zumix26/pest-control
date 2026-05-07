@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Monitoring\Models;
+namespace Domain\Monitoring\Models;
 
-use App\Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\GatewayStatus;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

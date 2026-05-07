@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 use App\Application\DTOs\CreateGatewayDTO;
-use App\Application\UseCases\CreateGatewayUseCase;
+use App\UseCases\CreateGatewayUseCase;
 use App\Domain\Monitoring\Enums\GatewayStatus;
-use App\Domain\Monitoring\Models\Gateway;
+use Domain\Monitoring\Models\Gateway;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);

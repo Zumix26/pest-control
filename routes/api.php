@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Application\Http\Controllers\Api\V1\CustomerController;
-use App\Application\Http\Controllers\Api\V1\FacilityController;
-use App\Application\Http\Controllers\Api\V1\GatewayController;
-use App\Application\Http\Controllers\Api\V1\TrapController;
-use App\Application\Http\Controllers\Api\V1\TrapEventController;
-use App\Application\Http\Controllers\Api\V1\TrapPhotoController;
+use App\Http\Controllers\Api\V1\CustomerController;
+use App\Http\Controllers\Api\V1\FacilityController;
+use App\Http\Controllers\Api\V1\GatewayController;
+use App\Http\Controllers\Api\V1\TrapController;
+use App\Http\Controllers\Api\V1\TrapEventController;
+use App\Http\Controllers\Api\V1\TrapPhotoController;
 use App\Application\Http\Middleware\ValidateGatewaySignature;
 use Illuminate\Support\Facades\Route;
 
