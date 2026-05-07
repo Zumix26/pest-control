@@ -18,4 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
-    })->create();
+    })
+    ->registered(function ($app) {
+        $app->useAppPath($app->basePath('src/Application'));
+    })
+    ->create();
