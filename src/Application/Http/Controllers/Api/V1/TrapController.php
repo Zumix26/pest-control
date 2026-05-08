@@ -125,7 +125,7 @@ final class TrapController extends Controller
     )]
     public function show(string $id): TrapResource
     {
-        $trap = Trap::where('hardware_id', $id)->firstOrFail();
+        $trap = Trap::find($id);
 
         if ($trap === null) {
             abort(404, 'Trap not found');
