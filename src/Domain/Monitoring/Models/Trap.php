@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Domain\Monitoring\Models;
 
-use Database\Factories\TrapFactory;
 use Domain\Monitoring\Enums\TrapStatus;
 use Domain\Monitoring\Enums\TrapType;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;

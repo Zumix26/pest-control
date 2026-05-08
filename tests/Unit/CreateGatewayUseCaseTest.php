@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\DTOs\CreateGatewayDTO;
-use App\UseCases\CreateGatewayUseCase;
+use App\Monitoring\UseCases\Gateways\CreateGatewayUseCase;
 use Domain\Monitoring\Enums\GatewayStatus;
 use Domain\Monitoring\Models\Gateway;
 use Illuminate\Foundation\Testing\RefreshDatabase;

@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\DTOs\CreateGatewayDTO;
 use App\Http\Requests\CreateGatewayRequest;
 use App\Http\Resources\GatewayResource;
-use App\UseCases\CreateGatewayUseCase;
+use App\Monitoring\UseCases\Gateways\CreateGatewayUseCase;
 use Domain\Monitoring\Enums\GatewayStatus;
 use Domain\Monitoring\Models\Gateway;
 use Illuminate\Http\JsonResponse;

@@ -9,8 +9,10 @@ use App\DTOs\TrapEventDTO;
 use App\Http\Requests\CreateTrapRequest;
 use App\Http\Resources\TrapEventResource;
 use App\Http\Resources\TrapResource;
-use App\UseCases\CreateTrapUseCase;
-use App\UseCases\RegisterTrapEventUseCase;
+use App\Monitoring\UseCases\Facilities\DeleteFacilityUseCase;
+use App\Monitoring\UseCases\Traps\CreateTrapUseCase;
+use App\Monitoring\UseCases\Traps\DeleteTrapUseCase;
+use App\Monitoring\UseCases\Traps\RegisterTrapEventUseCase;
 use Domain\Monitoring\Enums\TrapStatus;
 use Domain\Monitoring\Enums\TrapType;
 use Domain\Monitoring\Models\Trap;
@@ -25,6 +27,7 @@ final class TrapController extends Controller
     public function __construct(
         private readonly CreateTrapUseCase $createTrapUseCase,
         private readonly RegisterTrapEventUseCase $registerTrapEventUseCase,
+        private readonly DeleteTrapUseCase $deleteTrapUseCase,
     ) {}
 
     #[OA\Get(
@@ -122,7 +125,7 @@ final class TrapController extends Controller
     )]
     public function show(string $id): TrapResource
     {
-        $trap = Trap::find($id);
+        $trap = Trap::where('hardware_id', $id)->firstOrFail();
 
         if ($trap === null) {
             abort(404, 'Trap not found');
@@ -173,6 +176,15 @@ final class TrapController extends Controller
             ->setStatusCode(201);
     }
 
+    public function destroy(string $id): JsonResponse
+    {
+        $this->deleteTrapUseCase->execute($id);
+
+        return response()->json(null, 204);
+    }
+
+
+
     #[OA\Post(
         path: '/v1/traps/{id}/test-trigger',
         operationId: 'testTriggerTrap',
@@ -205,6 +217,7 @@ final class TrapController extends Controller
             )
         ]
     )]
+
     public function testTrigger(string $id): JsonResponse
     {
         $dto = new TrapEventDTO(

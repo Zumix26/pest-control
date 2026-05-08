@@ -7,7 +7,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\DTOs\TrapEventDTO;
 use App\Http\Requests\RegisterTrapEventRequest;
 use App\Http\Resources\TrapEventResource;
-use App\UseCases\RegisterTrapEventUseCase;
+use App\Monitoring\UseCases\Traps\RegisterTrapEventUseCase;
 use Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

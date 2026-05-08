@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Resources\TrapPhotoResource;
-use App\UseCases\UploadTrapPhotoUseCase;
+use App\Monitoring\UseCases\Traps\UploadTrapPhotoUseCase;
 use Domain\Monitoring\Models\TrapPhoto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -49,7 +49,7 @@ final class TrapPhotoController extends Controller
 
         $photo = $this->uploadUseCase->execute($trapId, $imageData, $capturedAt);
 
-        return new TrapPhotoResource($photo)
+        return (new TrapPhotoResource($photo))
             ->response()
             ->setStatusCode(201);
     }

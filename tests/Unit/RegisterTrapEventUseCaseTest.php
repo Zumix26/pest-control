@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use App\DTOs\TrapEventDTO;
-use App\UseCases\RegisterTrapEventUseCase;
+use App\Monitoring\UseCases\Traps\RegisterTrapEventUseCase;
 use Domain\Monitoring\Enums\GatewayStatus;
 use Domain\Monitoring\Enums\TrapStatus;
 use Domain\Monitoring\Enums\TrapType;
