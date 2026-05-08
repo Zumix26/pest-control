@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCases;
+namespace App\UseCases;
 
-use App\Domain\Monitoring\Models\Trap;
-use App\Domain\Monitoring\Models\TrapPhoto;
+use Domain\Monitoring\Models\Trap;
+use Domain\Monitoring\Models\TrapPhoto;
 use Illuminate\Support\Facades\Storage;
 
 final class UploadTrapPhotoUseCase

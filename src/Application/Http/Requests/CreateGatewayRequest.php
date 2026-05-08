@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Requests;
+namespace App\Http\Requests;
 
-use App\Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\GatewayStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;

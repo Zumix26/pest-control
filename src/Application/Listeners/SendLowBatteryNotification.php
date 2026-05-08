@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Listeners;
+namespace App\Listeners;
 
-use App\Domain\Monitoring\Events\LowBatteryDetected;
+use Domain\Monitoring\Events\LowBatteryDetected;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 

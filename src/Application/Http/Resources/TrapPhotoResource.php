@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\Domain\Monitoring\Models\TrapPhoto;
+use Domain\Monitoring\Models\TrapPhoto;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

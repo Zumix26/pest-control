@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Monitoring\ValueObjects;
+namespace Domain\Monitoring\ValueObjects;
 
 final readonly class FacilityId
 {

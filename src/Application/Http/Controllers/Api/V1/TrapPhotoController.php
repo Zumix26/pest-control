@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Application\Http\Resources\TrapPhotoResource;
-use App\Application\UseCases\UploadTrapPhotoUseCase;
-use App\Domain\Monitoring\Models\TrapPhoto;
+use App\Http\Resources\TrapPhotoResource;
+use App\UseCases\UploadTrapPhotoUseCase;
+use Domain\Monitoring\Models\TrapPhoto;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

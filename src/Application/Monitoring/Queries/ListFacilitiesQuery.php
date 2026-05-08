@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\Queries;
+namespace App\Monitoring\Queries;
 
-use App\Domain\Monitoring\Enums\FacilityStatus;
-use App\Domain\Monitoring\Enums\FacilityType;
-use App\Domain\Monitoring\Models\Facility;
+use Domain\Monitoring\Enums\FacilityStatus;
+use Domain\Monitoring\Enums\FacilityType;
+use Domain\Monitoring\Models\Facility;
 use Illuminate\Database\Eloquent\Collection;
 
 final class ListFacilitiesQuery

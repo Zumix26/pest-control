@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\V1\GatewayController;
 use App\Http\Controllers\Api\V1\TrapController;
 use App\Http\Controllers\Api\V1\TrapEventController;
 use App\Http\Controllers\Api\V1\TrapPhotoController;
-use App\Application\Http\Middleware\ValidateGatewaySignature;
+use App\Http\Middleware\ValidateGatewaySignature;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {

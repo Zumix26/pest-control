@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Application\DTOs\CreateGatewayDTO;
-use App\Application\Http\Requests\CreateGatewayRequest;
+use App\DTOs\CreateGatewayDTO;
+use App\Http\Requests\CreateGatewayRequest;
 use App\Http\Resources\GatewayResource;
 use App\UseCases\CreateGatewayUseCase;
-use App\Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\GatewayStatus;
 use Domain\Monitoring\Models\Gateway;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

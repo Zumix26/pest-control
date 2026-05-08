@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Application\DTOs\CreateTrapDTO;
-use App\Application\UseCases\CreateTrapUseCase;
-use App\Domain\Monitoring\Enums\GatewayStatus;
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Enums\TrapType;
+use App\DTOs\CreateTrapDTO;
+use App\UseCases\CreateTrapUseCase;
+use Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Enums\TrapType;
 use Domain\Monitoring\Models\Gateway;
-use App\Domain\Monitoring\Models\Trap;
+use Domain\Monitoring\Models\Trap;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);

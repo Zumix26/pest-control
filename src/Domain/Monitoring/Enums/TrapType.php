@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Monitoring\Enums;
+namespace Domain\Monitoring\Enums;
 
 enum TrapType: string
 {

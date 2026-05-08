@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\DTOs;
+namespace App\DTOs;
 
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Enums\TrapType;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Enums\TrapType;
 use Illuminate\Http\Request;
 
 final readonly class CreateTrapDTO

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Listeners;
+namespace App\Listeners;
 
-use App\Domain\Monitoring\Events\LowBatteryDetected;
-use App\Domain\Monitoring\Events\TrapTriggered;
+use Domain\Monitoring\Events\LowBatteryDetected;
+use Domain\Monitoring\Events\TrapTriggered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 final class CheckBatteryLevel implements ShouldQueue

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\UseCases;
+namespace App\Monitoring\UseCases;
 
-use App\Application\DTOs\UpdateCustomerDTO;
-use App\Domain\Monitoring\Models\Customer;
+use App\DTOs\UpdateCustomerDTO;
+use Domain\Monitoring\Models\Customer;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 

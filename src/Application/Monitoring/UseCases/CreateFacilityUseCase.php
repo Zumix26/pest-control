@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\UseCases;
+namespace App\Monitoring\UseCases;
 
-use App\Application\DTOs\CreateFacilityDTO;
-use App\Domain\Monitoring\Models\Facility;
+use App\DTOs\CreateFacilityDTO;
+use Domain\Monitoring\Models\Facility;
 use Illuminate\Support\Facades\DB;
 
 final class CreateFacilityUseCase

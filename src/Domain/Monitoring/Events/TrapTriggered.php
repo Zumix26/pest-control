@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Monitoring\Events;
+namespace Domain\Monitoring\Events;
 
-use App\Domain\Monitoring\Models\TrapEvent;
+use Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;

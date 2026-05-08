@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Application\UseCases;
+namespace App\UseCases;
 
-use App\Application\DTOs\TrapEventDTO;
-use App\Domain\Monitoring\Events\TrapTriggered;
-use App\Domain\Monitoring\Models\Trap;
-use App\Domain\Monitoring\Models\TrapEvent;
+use App\DTOs\TrapEventDTO;
+use Domain\Monitoring\Events\TrapTriggered;
+use Domain\Monitoring\Models\Trap;
+use Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Support\Facades\DB;
 
 final readonly class RegisterTrapEventUseCase

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Requests;
+namespace App\Http\Requests;
 
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Enums\TrapType;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Enums\TrapType;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use OpenApi\Attributes as OA;

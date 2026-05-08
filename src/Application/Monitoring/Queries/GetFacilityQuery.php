@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\Queries;
+namespace App\Monitoring\Queries;
 
-use App\Domain\Monitoring\Models\Facility;
+use Domain\Monitoring\Models\Facility;
 
 final class GetFacilityQuery
 {

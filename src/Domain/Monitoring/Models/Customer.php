@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Domain\Monitoring\Models;
 
-use App\Domain\Monitoring\Enums\CustomerStatus;
-use App\Domain\Monitoring\Enums\CustomerType;
+use Domain\Monitoring\Enums\CustomerStatus;
+use Domain\Monitoring\Enums\CustomerType;
 use DomainException;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

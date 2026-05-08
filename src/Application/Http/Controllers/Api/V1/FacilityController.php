@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
 use App\DTOs\CreateFacilityDTO;
 use App\DTOs\UpdateFacilityDTO;
-use App\Application\Http\Requests\CreateFacilityRequest;
-use App\Application\Http\Requests\UpdateFacilityRequest;
+use App\Http\Requests\CreateFacilityRequest;
+use App\Http\Requests\UpdateFacilityRequest;
 use App\Http\Resources\FacilityResource;
 use App\Http\Resources\FacilityWithGatewaysResource;
 use App\Http\Resources\GatewayResource;
-use App\Application\Monitoring\Queries\GetFacilityQuery;
-use App\Application\Monitoring\Queries\ListFacilitiesQuery;
-use App\Application\Monitoring\UseCases\CreateFacilityUseCase;
-use App\Application\Monitoring\UseCases\DeleteFacilityUseCase;
-use App\Application\Monitoring\UseCases\UpdateFacilityUseCase;
-use App\Domain\Monitoring\Enums\FacilityStatus;
-use App\Domain\Monitoring\Enums\FacilityType;
+use App\Monitoring\Queries\GetFacilityQuery;
+use App\Monitoring\Queries\ListFacilitiesQuery;
+use App\Monitoring\UseCases\CreateFacilityUseCase;
+use App\Monitoring\UseCases\DeleteFacilityUseCase;
+use App\Monitoring\UseCases\UpdateFacilityUseCase;
+use Domain\Monitoring\Enums\FacilityStatus;
+use Domain\Monitoring\Enums\FacilityType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

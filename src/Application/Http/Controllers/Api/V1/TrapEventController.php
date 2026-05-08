@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Application\DTOs\TrapEventDTO;
-use App\Application\Http\Requests\RegisterTrapEventRequest;
-use App\Application\Http\Resources\TrapEventResource;
-use App\Application\UseCases\RegisterTrapEventUseCase;
-use App\Domain\Monitoring\Models\TrapEvent;
+use App\DTOs\TrapEventDTO;
+use App\Http\Requests\RegisterTrapEventRequest;
+use App\Http\Resources\TrapEventResource;
+use App\UseCases\RegisterTrapEventUseCase;
+use Domain\Monitoring\Models\TrapEvent;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

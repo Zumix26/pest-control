@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\DTOs;
+namespace App\DTOs;
 
-use App\Domain\Monitoring\Enums\CustomerStatus;
-use App\Domain\Monitoring\Enums\CustomerType;
+use Domain\Monitoring\Enums\CustomerStatus;
+use Domain\Monitoring\Enums\CustomerType;
 use Illuminate\Http\Request;
 
 final readonly class UpdateCustomerDTO

@@ -11,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use Database\Factories\GatewayFactory;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 final class Gateway extends Model
 {
@@ -40,6 +42,8 @@ final class Gateway extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+
+
 
     public function newUniqueId(): string
     {

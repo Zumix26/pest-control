@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Monitoring\Events;
+namespace Domain\Monitoring\Events;
 
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Foundation\Events\Dispatchable;

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\UseCases;
+namespace App\Monitoring\UseCases;
 
-use App\Domain\Monitoring\Enums\GatewayStatus;
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Models\Customer;
-use App\Domain\Monitoring\Models\Facility;
+use Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Models\Customer;
+use Domain\Monitoring\Models\Facility;
 use Domain\Monitoring\Models\Gateway;
-use App\Domain\Monitoring\Models\Trap;
+use Domain\Monitoring\Models\Trap;
 use Illuminate\Support\Facades\DB;
 
 final class DeleteCustomerUseCase

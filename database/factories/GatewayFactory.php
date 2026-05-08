@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\GatewayStatus;
 use Domain\Monitoring\Models\Gateway;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 /**
  * @extends Factory<Gateway>
  */
-final class EloquentGatewayFactory extends Factory
+final class GatewayFactory extends Factory
 {
     protected $model = Gateway::class;
 
@@ -21,7 +21,7 @@ final class EloquentGatewayFactory extends Factory
         return [
             'hardware_id' => 'GW-' . strtoupper(Str::random(8)),
             'api_key' => Str::random(64),
-            'name' => fake()->city() . ' Gateway',
+            'name' => $this->faker->city() . ' Gateway',
             'location' => [
                 'latitude' => fake()->latitude(),
                 'longitude' => fake()->longitude(),

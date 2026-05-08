@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\Queries;
+namespace App\Monitoring\Queries;
 
-use App\Domain\Monitoring\Models\Customer;
+use Domain\Monitoring\Models\Customer;
 
 final class GetCustomerQuery
 {

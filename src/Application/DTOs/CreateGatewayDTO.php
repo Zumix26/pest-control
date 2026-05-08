@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Application\DTOs;
+namespace App\DTOs;
 
-use App\Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\GatewayStatus;
 use Illuminate\Http\Request;
 
 final readonly class CreateGatewayDTO

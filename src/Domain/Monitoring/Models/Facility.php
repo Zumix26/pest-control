@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Domain\Monitoring\Models;
 
-use App\Domain\Monitoring\Enums\FacilityStatus;
-use App\Domain\Monitoring\Enums\FacilityType;
+use Domain\Monitoring\Enums\FacilityStatus;
+use Domain\Monitoring\Enums\FacilityType;
 use DomainException;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

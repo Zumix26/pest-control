@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Monitoring\UseCases;
+namespace App\Monitoring\UseCases;
 
-use App\Application\DTOs\CreateCustomerDTO;
-use App\Domain\Monitoring\Models\Customer;
+use App\DTOs\CreateCustomerDTO;
+use Domain\Monitoring\Models\Customer;
 use Illuminate\Support\Facades\DB;
 
 final class CreateCustomerUseCase

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace Domain\Monitoring\Models;
 
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Enums\TrapType;
+use Database\Factories\TrapFactory;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Enums\TrapType;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,6 +47,7 @@ final class Trap extends Model
         'deleted_at' => 'datetime',
     ];
 
+    
     public function newUniqueId(): string
     {
         return (string) Str::uuid7();

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\DTOs;
 
-use App\Domain\Monitoring\Enums\FacilityStatus;
-use App\Domain\Monitoring\Enums\FacilityType;
+use Domain\Monitoring\Enums\FacilityStatus;
+use Domain\Monitoring\Enums\FacilityType;
 use Illuminate\Http\Request;
 
 final readonly class UpdateFacilityDTO

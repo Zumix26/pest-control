@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Enums\TrapType;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Enums\TrapType;
 use Domain\Monitoring\Models\Gateway;
-use App\Domain\Monitoring\Models\Trap;
+use Domain\Monitoring\Models\Trap;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 
 /**
  * @extends Factory<Trap>
  */
-final class EloquentTrapFactory extends Factory
+final class TrapFactory extends Factory
 {
     protected $model = Trap::class;
 
@@ -23,14 +23,14 @@ final class EloquentTrapFactory extends Factory
         return [
             'hardware_id' => 'TRAP-' . strtoupper(Str::random(8)),
             'gateway_id' => Gateway::factory(),
-            'name' => fake()->word() . ' Trap #' . fake()->numberBetween(1, 999),
-            'type' => fake()->randomElement(TrapType::cases()),
-            'status' => fake()->randomElement(TrapStatus::cases()),
+            'name' => $this->faker->word() . ' Trap #' . $this->faker->numberBetween(1, 999),
+            'type' => $this->faker->randomElement(TrapType::cases()),
+            'status' => $this->faker->randomElement(TrapStatus::cases()),
             'location' => [
-                'latitude' => fake()->latitude(),
-                'longitude' => fake()->longitude(),
+                'latitude' => $this->faker->latitude(),
+                'longitude' => $this->faker->longitude(),
             ],
-            'battery_level' => fake()->numberBetween(20, 100),
+            'battery_level' => $this->faker->numberBetween(20, 100),
             'total_catches' => 0,
             'last_event_at' => null,
         ];
@@ -46,7 +46,7 @@ final class EloquentTrapFactory extends Factory
     public function lowBattery(): static
     {
         return $this->state(fn (array $attributes) => [
-            'battery_level' => fake()->numberBetween(5, 19),
+            'battery_level' => $this->faker->numberBetween(5, 19),
         ]);
     }
 

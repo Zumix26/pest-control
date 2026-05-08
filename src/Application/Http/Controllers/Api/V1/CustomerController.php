@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Application\DTOs\CreateCustomerDTO;
-use App\Application\DTOs\UpdateCustomerDTO;
-use App\Application\Http\Requests\CreateCustomerRequest;
-use App\Application\Http\Requests\UpdateCustomerRequest;
-use App\Application\Http\Resources\CustomerResource;
-use App\Application\Http\Resources\CustomerWithFacilitiesResource;
-use App\Application\Http\Resources\FacilityResource;
-use App\Application\Monitoring\Queries\GetCustomerQuery;
-use App\Application\Monitoring\Queries\ListCustomersQuery;
-use App\Application\Monitoring\UseCases\CreateCustomerUseCase;
-use App\Application\Monitoring\UseCases\DeleteCustomerUseCase;
-use App\Application\Monitoring\UseCases\UpdateCustomerUseCase;
-use App\Domain\Monitoring\Enums\CustomerStatus;
-use App\Domain\Monitoring\Enums\CustomerType;
-use App\Domain\Monitoring\Models\Facility;
+use App\DTOs\CreateCustomerDTO;
+use App\DTOs\UpdateCustomerDTO;
+use App\Http\Requests\CreateCustomerRequest;
+use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Resources\CustomerResource;
+use App\Http\Resources\CustomerWithFacilitiesResource;
+use App\Http\Resources\FacilityResource;
+use App\Monitoring\Queries\GetCustomerQuery;
+use App\Monitoring\Queries\ListCustomersQuery;
+use App\Monitoring\UseCases\CreateCustomerUseCase;
+use App\Monitoring\UseCases\DeleteCustomerUseCase;
+use App\Monitoring\UseCases\UpdateCustomerUseCase;
+use Domain\Monitoring\Enums\CustomerStatus;
+use Domain\Monitoring\Enums\CustomerType;
+use Domain\Monitoring\Models\Facility;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Controllers\Api\V1;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Application\DTOs\CreateTrapDTO;
-use App\Application\DTOs\TrapEventDTO;
-use App\Application\Http\Requests\CreateTrapRequest;
-use App\Application\Http\Resources\TrapEventResource;
-use App\Application\Http\Resources\TrapResource;
-use App\Application\UseCases\CreateTrapUseCase;
-use App\Application\UseCases\RegisterTrapEventUseCase;
-use App\Domain\Monitoring\Enums\TrapStatus;
-use App\Domain\Monitoring\Enums\TrapType;
-use App\Domain\Monitoring\Models\Trap;
+use App\DTOs\CreateTrapDTO;
+use App\DTOs\TrapEventDTO;
+use App\Http\Requests\CreateTrapRequest;
+use App\Http\Resources\TrapEventResource;
+use App\Http\Resources\TrapResource;
+use App\UseCases\CreateTrapUseCase;
+use App\UseCases\RegisterTrapEventUseCase;
+use Domain\Monitoring\Enums\TrapStatus;
+use Domain\Monitoring\Enums\TrapType;
+use Domain\Monitoring\Models\Trap;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\UseCases;
 
-use App\Application\DTOs\CreateGatewayDTO;
+use App\DTOs\CreateGatewayDTO;
 use Domain\Monitoring\Models\Gateway;
 use Illuminate\Support\Str;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Application\Http\Middleware;
+namespace App\Http\Middleware;
 
 use Domain\Monitoring\Models\Gateway;
 use Closure;

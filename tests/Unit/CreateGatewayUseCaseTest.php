@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Application\DTOs\CreateGatewayDTO;
+use App\DTOs\CreateGatewayDTO;
 use App\UseCases\CreateGatewayUseCase;
-use App\Domain\Monitoring\Enums\GatewayStatus;
+use Domain\Monitoring\Enums\GatewayStatus;
 use Domain\Monitoring\Models\Gateway;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
