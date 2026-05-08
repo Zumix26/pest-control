@@ -14,9 +14,8 @@ final class UploadTrapPhotoUseCase
     {
         $trap = Trap::where('hardware_id', $trapId)->firstOrFail();
 
-        if ($trap === null) {
-            throw new \DomainException("Trap not found: {$trapId}");
-        }
+
+
 
         $filename = now()->format('Y-m-d_H-i-s').'_'.uniqid().'.jpg';
         $path = "trap-photos/{$trapId}/{$filename}";
@@ -24,7 +23,7 @@ final class UploadTrapPhotoUseCase
         Storage::put($path, $imageData);
 
         return TrapPhoto::create([
-            'trap_id' => $trapId,
+            'trap_id'   => $trap->id,
             'file_path' => $path,
             'file_size' => strlen($imageData),
             'captured_at' => $capturedAt,
